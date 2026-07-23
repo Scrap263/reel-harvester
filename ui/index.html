@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Локальная панель сбора и анализа Instagram Reels">
+  <title>Reel Harvester</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/channels.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <div class="shell">
+    <aside class="sidebar">
+      <a class="brand" href="#top" aria-label="Reel Harvester">
+        <span class="brand-mark">RH</span><span><b>Reel</b><small>Harvester</small></span>
+      </a>
+      <nav aria-label="Основная навигация">
+        <a class="nav-link active" href="#overview"><span>◫</span>Обзор</a>
+        <a class="nav-link" href="#library"><span>▦</span>Библиотека</a>
+        <a class="nav-link" href="#scroll-insights"><span>↧</span>Скролл</a>
+        <a class="nav-link" href="#operations"><span>◉</span>Операции</a>
+      </nav>
+      <div class="sidebar-note">
+        <span class="status-dot"></span>
+        <div><strong>Локальный режим</strong><small>Данные остаются на этом ПК</small></div>
+      </div>
+    </aside>
+
+    <main id="top">
+      <header class="topbar">
+        <div><p class="eyebrow">CONTROL ROOM</p><h1>Рилсы — под контролем.</h1></div>
+        <div class="header-actions">
+          <button class="button ghost" id="refreshButton">Обновить</button>
+          <a class="button primary" href="/api/export.csv">Экспорт CSV</a>
+        </div>
+      </header>
+
+      <section id="overview" class="stats-grid" aria-label="Сводка"></section>
+
+      <section class="workspace" id="operations">
+        <div class="panel launch-panel">
+          <div class="panel-heading"><div><p class="eyebrow">НОВАЯ ЗАДАЧА</p><h2>Запустить операцию</h2></div><span class="chip" id="runnerState">Свободно</span></div>
+          <div class="operation-tabs" role="tablist">
+            <button class="operation-tab active" data-operation="collect">Собрать</button>
+            <button class="operation-tab" data-operation="scroll">Скролл Reels</button>
+            <button class="operation-tab" data-operation="transcribe">Расшифровать</button>
+            <button class="operation-tab" data-operation="analyze">Анализ текста</button>
+          </div>
+          <form id="collectForm" class="operation-form">
+            <label class="field wide"><span>Источник Instagram</span><input name="source" type="url" value="https://www.instagram.com/natgeo/reels/" required></label>
+            <label class="field"><span>Лимит</span><input name="max" type="number" min="1" max="500" value="50"></label>
+            <label class="toggle"><input name="enrich" type="checkbox"><span></span><div><b>Полные данные</b><small>Открывать каждый рилс</small></div></label>
+            <label class="toggle"><input name="download" type="checkbox"><span></span><div><b>Скачать медиа</b><small>Если доступно напрямую</small></div></label>
+            <label class="toggle"><input name="headless" type="checkbox"><span></span><div><b>Без окна</b><small>Фоновый режим</small></div></label>
+            <button class="button primary submit-button" type="submit">Запустить сбор <span>→</span></button>
+          </form>
+          <form id="scrollForm" class="operation-form hidden">
+            <div class="analysis-copy"><strong>Естественный просмотр Reels</strong><p>Playwright листает ленту, задерживается на каждом видео и сохраняет аккаунты, даты и метрики. Звук в этом режиме не собирается.</p></div>
+            <label class="field"><span>Сколько видео</span><input name="count" type="number" min="1" max="200" value="20"></label>
+            <label class="field"><span>Минимум секунд</span><input name="watchMin" type="number" min="1" max="60" value="3"></label>
+            <label class="field"><span>Максимум секунд</span><input name="watchMax" type="number" min="1" max="90" value="7"></label>
+            <label class="toggle"><input name="headless" type="checkbox"><span></span><div><b>Без окна</b><small>Фоновый режим</small></div></label>
+            <button class="button primary submit-button" type="submit">Запустить скролл <span>→</span></button>
+          </form>
+          <form id="transcribeForm" class="operation-form hidden">
+            <div class="analysis-copy"><strong>Медиа загружается автоматически</strong><p>Подходит и для записей с временным blob-адресом. Затем Whisper сохранит текст и язык в базу.</p></div>
+            <label class="field"><span>Модель</span><select name="model"><option>base</option><option selected>small</option><option>medium</option><option>turbo</option></select></label>
+            <label class="field"><span>Лимит очереди</span><input name="limit" type="number" min="1" max="500" value="20"></label>
+            <label class="field"><span>Язык</span><select name="language"><option value="">Авто</option><option value="ru">Русский</option><option value="en">English</option></select></label>
+            <label class="toggle"><input name="wordTimestamps" type="checkbox"><span></span><div><b>Таймкоды слов</b><small>Больше данных</small></div></label>
+            <button class="button primary submit-button" type="submit">Запустить Whisper <span>→</span></button>
+          </form>
+          <form id="analyzeForm" class="operation-form hidden">
+            <div class="analysis-copy"><strong>Локальный анализ</strong><p>Пересчитает хэштеги, язык, темы, ключевые слова, рекламу и похожие описания без открытия Instagram.</p></div>
+            <button class="button primary submit-button" type="submit">Пересчитать данные <span>→</span></button>
+          </form>
+        </div>
+
+        <div class="panel console-panel">
+          <div class="panel-heading"><div><p class="eyebrow">LIVE LOG</p><h2>Ход выполнения</h2></div><button class="icon-button hidden" id="stopButton" title="Остановить">■</button></div>
+          <div id="jobSummary" class="job-summary empty">Задачи ещё не запускались</div>
+          <div id="console" class="console"><div class="console-empty">Логи появятся здесь после запуска операции.</div></div>
+        </div>
+      </section>
+
+      <section id="scroll-insights" class="panel scroll-panel">
+        <div class="scroll-header">
+          <div><p class="eyebrow">REELS DISCOVERY</p><h2>Статистика скролла</h2></div>
+          <div class="scroll-controls">
+            <select id="scrollSessionSelect" aria-label="Сессия скролла"><option value="">Сессий пока нет</option></select>
+            <select id="scrollGradeFilter" aria-label="Фильтр результатов скролла">
+              <option value="all">Все увиденные</option>
+              <option value="recent-popular">Свежие · 100K+</option>
+              <option value="500k">500K+ просмотров</option>
+              <option value="100k">100K+ просмотров</option>
+              <option value="engagement">Высокий engagement</option>
+            </select>
+          </div>
+        </div>
+        <div id="scrollSummary" class="scroll-summary"><div class="empty-library">Запустите первую скролл-сессию.</div></div>
+        <div id="scrollAccounts" class="scroll-accounts"></div>
+        <div id="scrollReels" class="scroll-reels"></div>
+      </section>
+
+      <section id="library" class="panel library-panel">
+        <div class="library-header">
+          <div><p class="eyebrow">БИБЛИОТЕКА</p><h2>Собранные рилсы</h2></div>
+          <div class="library-tools">
+            <select id="audioFilter" aria-label="Смысл расшифровки"><option value="all">Любой звук</option><option value="recommended">Стоит расшифровать</option><option value="viral">Вирусный оригинальный звук</option><option value="music">Музыкальные треки</option><option value="review">Нужно проверить</option><option value="skip">Можно пропустить</option></select>
+            <select id="sourceFilter" aria-label="Источник"><option value="instagram">Instagram</option></select>
+            <select id="accountFilter" aria-label="Аккаунт Instagram"><option value="">Все аккаунты</option></select>
+            <div class="search"><span>⌕</span><input id="searchInput" placeholder="Shortcode, описание, транскрипт…"></div>
+            <select id="statusFilter" aria-label="Фильтр статуса"><option value="all">Все записи</option><option value="transcribed">С транскриптом</option><option value="pending">Без транскрипта</option><option value="media">Медиа скачано</option><option value="errors">С ошибками</option></select>
+          </div>
+        </div>
+        <div id="libraryContext" class="library-context" aria-live="polite"></div>
+        <div class="selection-bar" aria-label="Выбор рилсов для расшифровки">
+          <div class="selection-copy">
+            <strong id="selectionCount">Выбрано: 0 рилсов</strong>
+            <small id="selectionHint">Отметьте конкретные карточки — Whisper обработает только их.</small>
+          </div>
+          <div class="selection-actions">
+            <button id="selectRecommended" class="button ghost compact-button" type="button">Выбрать рекомендованные</button>
+            <button id="selectVisible" class="button ghost compact-button" type="button">Выбрать загруженные</button>
+            <button id="clearSelection" class="button ghost compact-button" type="button" disabled>Снять выбор</button>
+            <label class="selection-model"><span>Модель</span><select id="selectedModel"><option>base</option><option selected>small</option><option>medium</option><option>turbo</option></select></label>
+            <button id="transcribeSelected" class="button primary compact-button" type="button" disabled>Расшифровать выбранные</button>
+          </div>
+        </div>
+        <div id="reelsGrid" class="reels-grid"></div>
+        <button id="loadMore" class="button ghost load-more">Показать ещё</button>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="reelDialog">
+    <button class="dialog-close" aria-label="Закрыть">×</button>
+    <div id="dialogContent"></div>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

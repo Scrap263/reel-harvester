@@ -1,0 +1,27 @@
+{
+  "name": "reel-harvester",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright-сборщик публичных Instagram Reels без Instagram и Apify API",
+  "type": "module",
+  "scripts": {
+    "login": "node --disable-warning=ExperimentalWarning src/cli.js login",
+    "collect": "node --disable-warning=ExperimentalWarning src/cli.js collect",
+    "scroll": "node --disable-warning=ExperimentalWarning src/cli.js scroll",
+    "analyze": "node --disable-warning=ExperimentalWarning src/cli.js analyze",
+    "setup:transcribe": "python -m venv .venv && .venv\\Scripts\\python.exe -m pip install -r requirements-transcribe.txt",
+    "transcribe": "node src/transcribe-cli.js",
+    "export": "node --disable-warning=ExperimentalWarning src/cli.js export",
+    "stats": "node --disable-warning=ExperimentalWarning src/cli.js stats",
+    "ui": "node --disable-warning=ExperimentalWarning src/server.js",
+    "desktop": "node src/desktop.js",
+    "trace": "playwright-core show-trace",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "playwright-core": "^1.61.1"
+  },
+  "engines": {
+    "node": ">=22.5"
+  }
+}

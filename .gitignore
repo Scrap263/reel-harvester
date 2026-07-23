@@ -1,0 +1,8 @@
+node_modules/
+.venv/
+.instagram-profile/
+data/models/
+playwright-report/
+test-results/
+__pycache__/
+*.pyc
